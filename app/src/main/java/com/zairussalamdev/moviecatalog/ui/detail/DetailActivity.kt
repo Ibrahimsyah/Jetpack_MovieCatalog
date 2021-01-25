@@ -16,6 +16,7 @@ class DetailActivity : AppCompatActivity() {
 
         const val TYPE_MOVIES = 1
         const val TYPE_TV_SHOWS = 2
+        const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500/"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +39,9 @@ class DetailActivity : AppCompatActivity() {
         viewModel.getMovieDetail(type, contentId).observe(this, { detail ->
             supportActionBar?.title = detail?.title
             binding.detailProgressBar.visibility = View.GONE
-            Glide.with(this).load("https://image.tmdb.org/t/p/w500/${detail?.posterPath}")
+            Glide.with(this).load("$IMAGE_BASE_URL${detail?.posterPath}")
                 .into(binding.movieDetailPoster)
-            Glide.with(this).load("https://image.tmdb.org/t/p/w500/${detail?.backdropPath}")
+            Glide.with(this).load("$IMAGE_BASE_URL{detail?.backdropPath}")
                 .into(binding.movieDetailBackdrop)
             binding.movieDetailTitle.text = detail?.title
             binding.movieDetailTagLine.text = detail?.tagLine

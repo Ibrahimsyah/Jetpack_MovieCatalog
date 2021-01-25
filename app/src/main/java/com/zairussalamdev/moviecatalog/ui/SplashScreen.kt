@@ -7,12 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.zairussalamdev.moviecatalog.R
 import com.zairussalamdev.moviecatalog.ui.home.HomeActivity
 
+const val splashScreenTimeoutMillis: Long = 3000
+
 class SplashScreen : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
 
-        val splashScreenTimeoutMillis: Long = 3000
         Handler().postDelayed({
             val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)

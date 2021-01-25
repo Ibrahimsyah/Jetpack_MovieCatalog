@@ -16,6 +16,7 @@ android {
         versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "TMDB_API_KEY", '"bbf5a3000e95f1dddf266b5e187d4b21"')
     }
 
     buildTypes {
