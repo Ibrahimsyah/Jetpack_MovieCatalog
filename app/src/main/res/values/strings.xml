@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">MovieCatalog</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="movies">Movies</string>
+    <string name="tvShows">TV Shows</string>
+    <string name="description">Description</string>
+    <string name="rating">Rating</string>
+    <string name="homepage">Homepage</string>
+    <string name="status">Status</string>
+    <string name="releaseDate">Release Date</string>
+</resources>
