@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviecatalog.ui.detail
+package com.zairussalamdev.moviecatalog.ui.favorite_detail
 
 import android.content.Context
 import android.os.Bundle
@@ -10,11 +10,11 @@ import com.bumptech.glide.Glide
 import com.zairussalamdev.moviecatalog.R
 import com.zairussalamdev.moviecatalog.data.source.local.entity.DetailEntity
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
-import com.zairussalamdev.moviecatalog.databinding.ActivityDetailBinding
+import com.zairussalamdev.moviecatalog.databinding.ActivityFavoriteDetailBinding
 import com.zairussalamdev.moviecatalog.utils.MovieType
 import com.zairussalamdev.moviecatalog.viewmodels.ViewModelFactory
 
-class DetailActivity : AppCompatActivity() {
+class FavoriteDetailActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_CONTENT = "EXTRA_CONTENT"
         const val EXTRA_TYPE = "EXTRA_TYPE"
@@ -24,7 +24,7 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding: ActivityDetailBinding = ActivityDetailBinding.inflate(layoutInflater)
+        val binding: ActivityFavoriteDetailBinding = ActivityFavoriteDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -36,16 +36,17 @@ class DetailActivity : AppCompatActivity() {
         val viewModel = ViewModelProvider(
             this,
             factory
-        )[DetailViewModel::class.java]
+        )[FavoriteDetailViewModel::class.java]
 
         var isFavorite = false
         var movieDetail: DetailEntity? = null
 
-        binding.detailProgressBar.visibility = View.VISIBLE
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        binding.detailProgressBar.visibility = View.VISIBLE
         viewModel.getMovieDetail(type, contentId).observe(this, { detail ->
             movieDetail = detail
-            supportActionBar?.title = detail?.title
             binding.detailProgressBar.visibility = View.GONE
             Glide.with(this).load("$IMAGE_BASE_URL${detail?.posterPath}")
                 .placeholder(R.drawable.image_placeholder)

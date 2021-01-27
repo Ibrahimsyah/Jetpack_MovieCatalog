@@ -6,5 +6,7 @@ import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 
 class TvShowsViewModel(private val movieRepository: MovieRepository) : ViewModel() {
-    fun getAllTvShows(): LiveData<List<MovieEntity>> = movieRepository.getTvShowList()
+    fun getAllTvShows(): LiveData<List<MovieEntity>> {
+        return  movieRepository.getTvShowList()
+    }
 }

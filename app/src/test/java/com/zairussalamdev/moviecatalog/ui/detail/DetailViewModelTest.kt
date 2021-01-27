@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.DetailEntity
-import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.utils.DummyData
 import junit.framework.Assert.assertNotNull
 import org.junit.Before

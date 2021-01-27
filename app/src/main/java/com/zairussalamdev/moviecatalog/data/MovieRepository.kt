@@ -2,6 +2,9 @@ package com.zairussalamdev.moviecatalog.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import com.zairussalamdev.moviecatalog.data.source.local.LocalDataSource
 import com.zairussalamdev.moviecatalog.data.source.local.entity.DetailEntity
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.data.source.remote.RemoteDataSource
@@ -9,17 +12,26 @@ import com.zairussalamdev.moviecatalog.data.source.remote.response.Movie
 import com.zairussalamdev.moviecatalog.data.source.remote.response.MovieDetailResponse
 import com.zairussalamdev.moviecatalog.data.source.remote.response.TvShow
 import com.zairussalamdev.moviecatalog.data.source.remote.response.TvShowDetailResponse
+import com.zairussalamdev.moviecatalog.utils.AppExecutors
 
-class MovieRepository private constructor(private val remoteDataSource: RemoteDataSource) :
+class MovieRepository private constructor(
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource,
+    private val appExecutors: AppExecutors
+) :
     MovieDataSource {
 
     companion object {
         @Volatile
         var instance: MovieRepository? = null
 
-        fun getInstance(remoteDataSource: RemoteDataSource): MovieRepository {
+        fun getInstance(
+            remoteDataSource: RemoteDataSource,
+            localDataSource: LocalDataSource,
+            appExecutors: AppExecutors
+        ): MovieRepository {
             return instance ?: synchronized(this) {
-                instance ?: MovieRepository(remoteDataSource)
+                instance ?: MovieRepository(remoteDataSource, localDataSource, appExecutors)
             }
         }
     }
@@ -113,5 +125,39 @@ class MovieRepository private constructor(private val remoteDataSource: RemoteDa
             }
         })
         return tvShowDetailResult
+    }
+
+    override fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(4)
+            .setPageSize(4)
+            .build()
+        return LivePagedListBuilder(localDataSource.getFavouriteMovies(), config).build()
+    }
+
+    override fun getFavoriteTvShows(): LiveData<PagedList<MovieEntity>> {
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(4)
+            .setPageSize(4)
+            .build()
+        return LivePagedListBuilder(localDataSource.getFavoriteTvShows(), config).build()
+    }
+
+    override fun addFavoriteMovie(movie: MovieEntity) {
+        appExecutors.diskIO().execute{
+            localDataSource.insertFavoriteMovie(movie)
+        }
+    }
+
+    override fun removeFavoriteMovie(movie: MovieEntity) {
+        appExecutors.diskIO().execute{
+            localDataSource.deleteFavoriteMovie(movie)
+        }
+    }
+
+    override fun checkMovieIsFavourite(id: Int): LiveData<Boolean> {
+        return localDataSource.checkMovieIsFavourite(id)
     }
 }

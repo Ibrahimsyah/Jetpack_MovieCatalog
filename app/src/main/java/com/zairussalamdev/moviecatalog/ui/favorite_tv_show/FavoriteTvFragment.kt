@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviecatalog.ui.tvshows
+package com.zairussalamdev.moviecatalog.ui.favorite_tv_show
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,12 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zairussalamdev.moviecatalog.databinding.FragmentTvShowsBinding
 import com.zairussalamdev.moviecatalog.ui.adapter.MovieAdapter
-import com.zairussalamdev.moviecatalog.ui.detail.DetailActivity
+import com.zairussalamdev.moviecatalog.ui.favorite_detail.FavoriteDetailActivity
 import com.zairussalamdev.moviecatalog.utils.MovieType
 import com.zairussalamdev.moviecatalog.viewmodels.ViewModelFactory
 
-class TvShowsFragment() : Fragment() {
+class FavoriteTvFragment() : Fragment() {
     private lateinit var tvShowsFragmentBinding: FragmentTvShowsBinding
+    private lateinit var viewModel: FavoriteTvFragment
+    private lateinit var adapter: FavoriteTvFragment
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -28,12 +31,13 @@ class TvShowsFragment() : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
-            val viewModel = ViewModelProvider(this, factory)[TvShowsViewModel::class.java]
+            val viewModel = ViewModelProvider(this, factory)[FavoriteTvViewModel::class.java]
             val adapter = MovieAdapter()
+
             adapter.setListener {
-                val intent = Intent(requireActivity(), DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_CONTENT, it.id)
-                intent.putExtra(DetailActivity.EXTRA_TYPE, MovieType.TYPE_TV_SHOW)
+                val intent = Intent(requireActivity(), FavoriteDetailActivity::class.java)
+                intent.putExtra(FavoriteDetailActivity.EXTRA_CONTENT, it.id)
+                intent.putExtra(FavoriteDetailActivity.EXTRA_TYPE, MovieType.TYPE_TV_SHOW)
                 this.context?.startActivity(intent)
             }
             viewModel.getAllTvShows().observe(viewLifecycleOwner, { tvShows ->

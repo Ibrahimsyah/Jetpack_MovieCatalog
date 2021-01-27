@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviecatalog.ui.detail
+package com.zairussalamdev.moviecatalog.ui.favorite_detail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,7 +8,7 @@ import com.zairussalamdev.moviecatalog.data.source.local.entity.DetailEntity
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.utils.MovieType
 
-class DetailViewModel(private val movieRepository: MovieRepository) : ViewModel() {
+class FavoriteDetailViewModel(private val movieRepository: MovieRepository) : ViewModel() {
     var movie = MutableLiveData<MovieEntity>()
     fun getMovieDetail(type: Int, contentId: Int): LiveData<DetailEntity> {
         return when (type) {

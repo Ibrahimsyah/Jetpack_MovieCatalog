@@ -3,6 +3,7 @@
     package="com.zairussalamdev.moviecatalog">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,9 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieCatalog">
-        <activity android:name=".ui.SplashScreen" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".ui.favorite.FavoriteActivity"></activity>
+        <activity
+            android:name=".ui.SplashScreen"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -24,8 +29,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.home.HomeActivity" />
         </activity>
-        <activity android:name=".ui.home.HomeActivity"/>
-
+        <activity
+            android:name=".ui.favorite_detail.FavoriteDetailActivity"
+            android:parentActivityName=".ui.favorite.FavoriteActivity"
+            android:theme="@style/NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.favorite.FavoriteActivity" />
+        </activity>
+        <activity android:name=".ui.home.HomeActivity" />
     </application>
 
 </manifest>

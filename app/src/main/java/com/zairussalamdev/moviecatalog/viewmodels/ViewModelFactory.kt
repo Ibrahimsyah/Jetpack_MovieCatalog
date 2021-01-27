@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.di.Injection
 import com.zairussalamdev.moviecatalog.ui.detail.DetailViewModel
+import com.zairussalamdev.moviecatalog.ui.favorite_detail.FavoriteDetailViewModel
+import com.zairussalamdev.moviecatalog.ui.favorite_movie.FavoriteMovieViewModel
+import com.zairussalamdev.moviecatalog.ui.favorite_tv_show.FavoriteTvViewModel
 import com.zairussalamdev.moviecatalog.ui.movies.MovieViewModel
 import com.zairussalamdev.moviecatalog.ui.tvshows.TvShowsViewModel
 
@@ -32,6 +35,14 @@ class ViewModelFactory private constructor(private val movieRepository: MovieRep
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 DetailViewModel(movieRepository) as T
+            }
+            modelClass.isAssignableFrom(FavoriteTvViewModel::class.java) -> {
+                FavoriteTvViewModel(movieRepository) as T
+            }
+            modelClass.isAssignableFrom(FavoriteMovieViewModel::class.java) -> {
+                FavoriteMovieViewModel(movieRepository) as T
+            }modelClass.isAssignableFrom(FavoriteDetailViewModel::class.java) -> {
+                FavoriteDetailViewModel(movieRepository) as T
             }
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }

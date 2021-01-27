@@ -72,4 +72,17 @@ class HomeActivityTest {
         onView(withId(R.id.movieDetailPoster)).check(matches(isDisplayed()))
         onView(withId(R.id.movieDetailTagLine)).check(matches(isDisplayed()))
     }
+
+    @Test
+    fun loadFavoriteMovies() {
+        onView(withId(R.id.menu_favorite)).perform(click())
+        onView(withId(R.id.rv_movies)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun loadFavoriteTvShows() {
+        onView(withId(R.id.menu_favorite)).perform(click())
+        onView(withText("TV SHOWS")).perform(click())
+        onView(withId(R.id.rvTvShows)).check(matches(isDisplayed()))
+    }
 }

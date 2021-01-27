@@ -42,4 +42,5 @@ ext {
     androidXTestVersion = '1.2.0'
     retrofitVersion = '2.9.0'
     idleResourceVersion = '3.3.0'
+    pagingVersion = '2.1.1'
 }

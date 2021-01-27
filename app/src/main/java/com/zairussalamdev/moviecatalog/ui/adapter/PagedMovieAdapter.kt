@@ -2,16 +2,30 @@ package com.zairussalamdev.moviecatalog.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.databinding.ItemMovieBinding
 
-class MovieAdapter(
-) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+class PagedMovieAdapter internal constructor() :
+    PagedListAdapter<MovieEntity, PagedMovieAdapter.MovieViewHolder>(DIFF_CALLBACK) {
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MovieEntity>() {
+            override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+                return oldItem.id == newItem.id
+            }
 
+            override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
     private var movies = ArrayList<MovieEntity>()
     private lateinit var listener : (MovieEntity) -> Unit
+
+    fun getSwipedData(swipedPosition: Int): MovieEntity? = getItem(swipedPosition)
 
     fun setMovies(movies: List<MovieEntity>?){
         movies?.let{

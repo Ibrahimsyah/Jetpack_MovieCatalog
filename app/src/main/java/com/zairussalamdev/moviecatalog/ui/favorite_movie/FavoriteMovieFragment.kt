@@ -1,4 +1,4 @@
-package com.zairussalamdev.moviecatalog.ui.movies
+package com.zairussalamdev.moviecatalog.ui.favorite_movie
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,11 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zairussalamdev.moviecatalog.databinding.FragmentMoviesBinding
 import com.zairussalamdev.moviecatalog.ui.adapter.MovieAdapter
-import com.zairussalamdev.moviecatalog.ui.detail.DetailActivity
+import com.zairussalamdev.moviecatalog.ui.favorite_detail.FavoriteDetailActivity
 import com.zairussalamdev.moviecatalog.utils.MovieType
 import com.zairussalamdev.moviecatalog.viewmodels.ViewModelFactory
 
-class MoviesFragment(private val showFavoriteList: Boolean = false) : Fragment() {
+class FavoriteMovieFragment(private val showFavoriteList: Boolean = false) : Fragment() {
 
     private lateinit var movieFragmentBinding: FragmentMoviesBinding
     override fun onCreateView(
@@ -29,13 +29,13 @@ class MoviesFragment(private val showFavoriteList: Boolean = false) : Fragment()
         super.onViewCreated(view, savedInstanceState)
         if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
-            val viewModel = ViewModelProvider(this, factory)[MovieViewModel::class.java]
+            val viewModel = ViewModelProvider(this, factory)[FavoriteMovieViewModel::class.java]
             val adapter = MovieAdapter()
             adapter.setListener {
 
-                val intent = Intent(requireActivity(), DetailActivity::class.java)
-                intent.putExtra(DetailActivity.EXTRA_CONTENT, it.id)
-                intent.putExtra(DetailActivity.EXTRA_TYPE, MovieType.TYPE_MOVIE)
+                val intent = Intent(requireActivity(), FavoriteDetailActivity::class.java)
+                intent.putExtra(FavoriteDetailActivity.EXTRA_CONTENT, it.id)
+                intent.putExtra(FavoriteDetailActivity.EXTRA_TYPE, MovieType.TYPE_MOVIE)
                 this.context?.startActivity(intent)
             }
 
