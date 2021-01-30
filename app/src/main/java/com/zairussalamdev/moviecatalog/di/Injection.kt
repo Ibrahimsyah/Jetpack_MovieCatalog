@@ -12,7 +12,7 @@ import com.zairussalamdev.moviecatalog.utils.AppExecutors
 object Injection {
     fun provideRepository(context: Context): MovieRepository {
         val retrofit = MovieDbService.getInstance().create(MovieDbInterface::class.java)
-        val database = MovieRoomDatabase.getDatabase(context)
+        val database = MovieRoomDatabase.getInstance(context)
         val appExecutors = AppExecutors()
         val remoteRepository = RemoteDataSource.getInstance(retrofit)
         val localRepository = LocalDataSource.getInstance(database.movieDao())

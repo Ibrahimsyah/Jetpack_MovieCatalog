@@ -12,19 +12,19 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(movie: MovieEntity)
 
-    @Update
-    fun update(movie: MovieEntity)
-
     @Delete
     fun delete(movie: MovieEntity)
+
+    @Update
+    fun update(movie: MovieEntity)
 
     @RawQuery(observedEntities = [MovieEntity::class])
     fun checkMovieIsFavourite(query: SupportSQLiteQuery): LiveData<Boolean>
 
-    @Query("select * from movies where movie_type = ${MovieType.TYPE_MOVIE} order by title asc")
+    @Query("SELECT * FROM MOVIES WHERE movie_type = ${MovieType.TYPE_MOVIE} ")
     fun getAllFavoriteMovies(): DataSource.Factory<Int, MovieEntity>
 
-    @Query("select * from movies where movie_type = ${MovieType.TYPE_TV_SHOW} order by title asc")
+    @Query("SELECT * FROM movies WHERE movie_type = ${MovieType.TYPE_TV_SHOW}")
     fun getAllFavoriteTvShows(): DataSource.Factory<Int, MovieEntity>
 }
 

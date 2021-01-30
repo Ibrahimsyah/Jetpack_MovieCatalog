@@ -14,16 +14,21 @@ abstract class MovieRoomDatabase : RoomDatabase() {
 
     companion object {
         @Volatile
-        private var instance: MovieRoomDatabase? = null
+        private var INSTANCE: MovieRoomDatabase? = null
 
-        @JvmStatic
-        fun getDatabase(context: Context): MovieRoomDatabase {
-            return instance ?: synchronized(this) {
-                instance ?: Room.databaseBuilder(
-                    context.applicationContext,
-                    MovieRoomDatabase::class.java, DB_NAME
-                ).build()
+        fun getInstance(context: Context): MovieRoomDatabase {
+            if (INSTANCE == null) {
+                synchronized(MovieRoomDatabase::class.java) {
+                    if (INSTANCE == null) {
+                        INSTANCE = Room.databaseBuilder(
+                            context.applicationContext,
+                            MovieRoomDatabase::class.java, DB_NAME
+                        )
+                            .build()
+                    }
+                }
             }
+            return INSTANCE as MovieRoomDatabase
         }
 
     }

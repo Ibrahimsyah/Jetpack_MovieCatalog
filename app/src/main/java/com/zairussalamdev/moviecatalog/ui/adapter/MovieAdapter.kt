@@ -28,11 +28,14 @@ class MovieAdapter(
     inner class MovieViewHolder(private val binding: ItemMovieBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: MovieEntity) {
-            binding.movieTitle.text = movie.title
-            binding.movieDesc.text = movie.overview
-            Glide.with(itemView.context).load("https://image.tmdb.org/t/p/w500/${movie.posterPath}")
-                .into(binding.moviePoster)
-            itemView.setOnClickListener { listener(movie) }
+            with(binding) {
+                movieTitle.text = movie.title
+                movieDesc.text = movie.overview
+                Glide.with(itemView.context)
+                    .load("https://image.tmdb.org/t/p/w500/${movie.posterPath}")
+                    .into(moviePoster)
+                itemView.setOnClickListener { listener(movie) }
+            }
         }
     }
 

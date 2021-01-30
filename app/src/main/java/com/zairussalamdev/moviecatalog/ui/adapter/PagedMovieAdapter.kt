@@ -22,18 +22,7 @@ class PagedMovieAdapter internal constructor() :
             }
         }
     }
-    private var movies = ArrayList<MovieEntity>()
     private lateinit var listener : (MovieEntity) -> Unit
-
-    fun getSwipedData(swipedPosition: Int): MovieEntity? = getItem(swipedPosition)
-
-    fun setMovies(movies: List<MovieEntity>?){
-        movies?.let{
-            this.movies.clear()
-            this.movies.addAll(it)
-            this.notifyDataSetChanged()
-        }
-    }
 
     fun setListener(listener : (MovieEntity) -> Unit){
         this.listener = listener
@@ -59,9 +48,10 @@ class PagedMovieAdapter internal constructor() :
             )
         )
 
-    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) =
-        holder.bind(movies[position])
-
-
-    override fun getItemCount(): Int = movies.size
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+        val item = getItem(position)
+        item?.let {
+            holder.bind(item)
+        }
+    }
 }

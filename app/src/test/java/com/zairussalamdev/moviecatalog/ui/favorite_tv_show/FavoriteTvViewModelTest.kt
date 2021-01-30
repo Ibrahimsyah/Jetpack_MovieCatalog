@@ -6,14 +6,17 @@ import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
-import com.zairussalamdev.moviecatalog.ui.favorite_movie.FavoriteMovieViewModel
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.junit.MockitoJUnitRunner
 
+@RunWith(MockitoJUnitRunner::class)
 class FavoriteTvViewModelTest{
     private lateinit var favoriteTvViewModel: FavoriteTvViewModel
 
@@ -35,16 +38,16 @@ class FavoriteTvViewModelTest{
     }
 
     @Test
-    fun getAllFavoriteMovies(){
+    fun getAllFavoriteMovies() {
         val dummyTvShows = pagedList
         Mockito.`when`(dummyTvShows.size).thenReturn(5)
 
         val movies = MutableLiveData<PagedList<MovieEntity>>()
         movies.value = dummyTvShows
 
-        Mockito.`when`(movieRepository.getFavoriteMovies()).thenReturn(movies)
-        val favMovies = movieRepository.getFavoriteMovies().value
-        Mockito.verify(movieRepository).getFavoriteMovies()
+        Mockito.`when`(movieRepository.getFavoriteTvShows()).thenReturn(movies)
+        val favMovies = favoriteTvViewModel.getAllTvShows().value
+        Mockito.verify(movieRepository).getFavoriteTvShows()
         assertNotNull(favMovies)
         assertEquals(5, favMovies?.size)
 

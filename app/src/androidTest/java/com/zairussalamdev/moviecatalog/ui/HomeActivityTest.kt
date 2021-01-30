@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -17,9 +18,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+
 @RunWith(AndroidJUnit4ClassRunner::class)
 class HomeActivityTest {
-
     @Before
     fun setup() {
         ActivityScenario.launch(HomeActivity::class.java)
@@ -75,14 +76,48 @@ class HomeActivityTest {
 
     @Test
     fun loadFavoriteMovies() {
+        onView(withId(R.id.rv_movies)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+        onView(withId(R.id.fab_favorite)).perform(click())
+        onView(isRoot()).perform(ViewActions.pressBack())
         onView(withId(R.id.menu_favorite)).perform(click())
         onView(withId(R.id.rv_movies)).check(matches(isDisplayed()))
+        onView(withId(R.id.rv_movies)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+        onView(withId(R.id.fab_favorite)).perform(click())
+        onView(isRoot()).perform(ViewActions.pressBack())
     }
 
     @Test
     fun loadFavoriteTvShows() {
+        onView(withText("TV SHOWS")).perform(click())
+        onView(withId(R.id.rvTvShows)).check(matches(isDisplayed()))
+        onView(withId(R.id.rvTvShows)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+        onView(withId(R.id.fab_favorite)).perform(click())
+        onView(isRoot()).perform(ViewActions.pressBack())
         onView(withId(R.id.menu_favorite)).perform(click())
         onView(withText("TV SHOWS")).perform(click())
         onView(withId(R.id.rvTvShows)).check(matches(isDisplayed()))
+        onView(withId(R.id.rvTvShows)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(
+                0,
+                click()
+            )
+        )
+        onView(withId(R.id.fab_favorite)).perform(click())
+        onView(isRoot()).perform(ViewActions.pressBack())
     }
 }

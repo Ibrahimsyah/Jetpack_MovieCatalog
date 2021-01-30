@@ -58,7 +58,7 @@ class DetailActivity : AppCompatActivity() {
             binding.movieDetailRating.text = detail?.voteAverage.toString()
             binding.movieDetailDescription.text = detail?.overview
             binding.movieDetailRating.text =
-                "${detail?.voteAverage} / 10 (${detail?.voteCount} Votes)"
+                StringBuilder("${detail?.voteAverage} / 10 (${detail?.voteCount} Votes)")
             binding.movieDetailHomepage.text = detail?.homepage
             binding.movieDetailReleaseDate.text = detail?.releaseDate
             binding.movieDetailStatus.text = detail?.status

@@ -1,6 +1,7 @@
 package com.zairussalamdev.moviecatalog.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
@@ -31,6 +32,7 @@ class MovieRepositoryTest{
 
     private val movieResponse = DummyData.getDummyMovieResponse()
     private val movieDetailResponse = DummyData.getDummyMovieDetailResponse()
+    private val movies = DummyData.getDummyListData()
     private val tvShowResponse = DummyData.getDummyTvShowResponse()
     private val tvShowDetailResponse = DummyData.getDummyTvShowDetailResponse()
 
@@ -100,8 +102,9 @@ class MovieRepositoryTest{
     }
 
     @Test
-    fun getFavoriteTvMovies(){
-        val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
+    fun getFavoriteTvMovies() {
+        val dataSourceFactory =
+            mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
         `when`(local.getFavoriteTvShows()).thenReturn(dataSourceFactory)
         movieRepository.getFavoriteTvShows()
 
@@ -109,4 +112,17 @@ class MovieRepositoryTest{
         verify(local).getFavoriteTvShows()
         assertNotNull(favoriteTvShow)
     }
+
+    @Test
+    fun checkMovieFavorite() {
+        val movieId = 1
+        val isFavorite = MutableLiveData<Boolean>()
+        isFavorite.value = false
+        `when`(local.checkMovieIsFavourite(movieId)).thenReturn(isFavorite)
+        val result = LiveDataTestUtil.getValue(movieRepository.checkMovieIsFavourite(movieId))
+        verify(local).checkMovieIsFavourite(movieId)
+
+        assertEquals(false, result)
+    }
+
 }

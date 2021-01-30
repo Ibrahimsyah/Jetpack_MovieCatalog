@@ -6,7 +6,8 @@ import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -46,7 +47,7 @@ class FavoriteMovieViewModelTest{
         movies.value = dummyMovies
 
         `when`(movieRepository.getFavoriteMovies()).thenReturn(movies)
-        val favMovies = movieRepository.getFavoriteMovies().value
+        val favMovies = favoriteMovieViewModel.getAllMovies().value
         verify(movieRepository).getFavoriteMovies()
         assertNotNull(favMovies)
         assertEquals(5, favMovies?.size)

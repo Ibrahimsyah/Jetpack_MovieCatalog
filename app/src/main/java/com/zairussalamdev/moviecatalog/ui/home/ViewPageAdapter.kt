@@ -15,7 +15,7 @@ class ViewPageAdapter(
         private val TAB_TITLES = intArrayOf(R.string.movies, R.string.tvShows)
     }
 
-    override fun getCount(): Int = 2
+    override fun getCount(): Int = TAB_TITLES.size
     override fun getItem(position: Int): Fragment =
         when (position) {
             0 -> MoviesFragment()

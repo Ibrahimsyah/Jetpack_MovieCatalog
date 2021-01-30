@@ -9,15 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.zairussalamdev.moviecatalog.databinding.FragmentTvShowsBinding
-import com.zairussalamdev.moviecatalog.ui.adapter.MovieAdapter
-import com.zairussalamdev.moviecatalog.ui.favorite_detail.FavoriteDetailActivity
+import com.zairussalamdev.moviecatalog.ui.adapter.PagedMovieAdapter
+import com.zairussalamdev.moviecatalog.ui.detail.DetailActivity
 import com.zairussalamdev.moviecatalog.utils.MovieType
 import com.zairussalamdev.moviecatalog.viewmodels.ViewModelFactory
 
 class FavoriteTvFragment() : Fragment() {
     private lateinit var tvShowsFragmentBinding: FragmentTvShowsBinding
-    private lateinit var viewModel: FavoriteTvFragment
-    private lateinit var adapter: FavoriteTvFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,18 +30,18 @@ class FavoriteTvFragment() : Fragment() {
         if (activity != null) {
             val factory = ViewModelFactory.getInstance(requireActivity())
             val viewModel = ViewModelProvider(this, factory)[FavoriteTvViewModel::class.java]
-            val adapter = MovieAdapter()
+            val adapter = PagedMovieAdapter()
 
             adapter.setListener {
-                val intent = Intent(requireActivity(), FavoriteDetailActivity::class.java)
-                intent.putExtra(FavoriteDetailActivity.EXTRA_CONTENT, it.id)
-                intent.putExtra(FavoriteDetailActivity.EXTRA_TYPE, MovieType.TYPE_TV_SHOW)
+                val intent = Intent(requireActivity(), DetailActivity::class.java)
+                intent.putExtra(DetailActivity.EXTRA_CONTENT, it.id)
+                intent.putExtra(DetailActivity.EXTRA_TYPE, MovieType.TYPE_TV_SHOW)
                 this.context?.startActivity(intent)
             }
             viewModel.getAllTvShows().observe(viewLifecycleOwner, { tvShows ->
                 tvShows?.let { tvShowList ->
                     tvShowsFragmentBinding.tvShowsProgressbar.visibility = View.GONE
-                    adapter.setMovies(tvShowList)
+                    adapter.submitList(tvShowList)
                     adapter.notifyDataSetChanged()
                 }
             })

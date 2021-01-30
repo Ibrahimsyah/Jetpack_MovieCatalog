@@ -9,7 +9,5 @@ import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 class FavoriteMovieViewModel(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
-    fun getAllMovies() : LiveData<PagedList<MovieEntity>> {
-        return movieRepository.getFavoriteMovies()
-    }
+    fun getAllMovies(): LiveData<PagedList<MovieEntity>> = movieRepository.getFavoriteMovies()
 }
