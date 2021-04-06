@@ -6,7 +6,7 @@ import com.zairussalamdev.moviecatalog.data.source.local.entity.DetailEntity
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 
 interface MovieDataSource {
-    fun getMovieList(): LiveData<List<MovieEntity>>
+    suspend fun getMovieList(): List<MovieEntity>
 
     fun getTvShowList(): LiveData<List<MovieEntity>>
 

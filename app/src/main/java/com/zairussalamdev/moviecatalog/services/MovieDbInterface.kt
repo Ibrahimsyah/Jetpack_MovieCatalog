@@ -14,7 +14,7 @@ const val apiKey: String = BuildConfig.TMDB_API_KEY
 interface MovieDbInterface {
 
     @GET("movie/now_playing?api_key=$apiKey")
-    fun getNowPlayingMovies(): Call<MovieResponse>
+    suspend fun getNowPlayingMovies(): MovieResponse
 
     @GET("tv/popular?api_key=$apiKey")
     fun getPopularTvShows(): Call<TvShowResponse>

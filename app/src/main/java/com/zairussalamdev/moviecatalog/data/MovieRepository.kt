@@ -8,11 +8,12 @@ import com.zairussalamdev.moviecatalog.data.source.local.LocalDataSource
 import com.zairussalamdev.moviecatalog.data.source.local.entity.DetailEntity
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.data.source.remote.RemoteDataSource
-import com.zairussalamdev.moviecatalog.data.source.remote.response.Movie
 import com.zairussalamdev.moviecatalog.data.source.remote.response.MovieDetailResponse
 import com.zairussalamdev.moviecatalog.data.source.remote.response.TvShow
 import com.zairussalamdev.moviecatalog.data.source.remote.response.TvShowDetailResponse
 import com.zairussalamdev.moviecatalog.utils.AppExecutors
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MovieRepository private constructor(
     private val remoteDataSource: RemoteDataSource,
@@ -36,26 +37,21 @@ class MovieRepository private constructor(
         }
     }
 
-    override fun getMovieList(): LiveData<List<MovieEntity>> {
-        val moviesResult = MutableLiveData<List<MovieEntity>>()
-        remoteDataSource.getMovieList(object : RemoteDataSource.MovieListCallback {
-            override fun onMovieListLoaded(movies: List<Movie>?) {
-                val movieList = ArrayList<MovieEntity>()
-                movies?.forEach { movie ->
-                    movieList.add(
-                        MovieEntity(
-                            overview = movie.overview,
-                            title = movie.title,
-                            posterPath = movie.posterPath,
-                            voteAverage = movie.voteAverage,
-                            id = movie.id,
-                        )
-                    )
-                }
-                moviesResult.postValue(movieList)
-            }
-        })
-        return moviesResult
+    override suspend fun getMovieList(): List<MovieEntity> {
+        val result = withContext(Dispatchers.IO) { remoteDataSource.getMovieList() }
+        val movieList = ArrayList<MovieEntity>()
+        result.movies.forEach { movie ->
+            movieList.add(
+                MovieEntity(
+                    overview = movie.overview,
+                    title = movie.title,
+                    posterPath = movie.posterPath,
+                    voteAverage = movie.voteAverage,
+                    id = movie.id,
+                )
+            )
+        }
+        return movieList
     }
 
     override fun getTvShowList(): LiveData<List<MovieEntity>> {
