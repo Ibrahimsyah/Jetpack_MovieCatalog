@@ -25,21 +25,11 @@ class RemoteDataSource private constructor(private val apiService: MovieDbInterf
         return result
     }
 
-    fun getTvShowList(callback: TvShowListCallback) {
+    suspend fun getTvShowList(): TvShowResponse {
         EspressoIdlingResource.increment()
-        apiService.getPopularTvShows().enqueue(object : Callback<TvShowResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<TvShowResponse>,
-                response: Response<TvShowResponse>
-            ) {
-                val tvShows = response.body()?.tvShows
-                EspressoIdlingResource.decrement()
-                return callback.onTvShowListLoaded(tvShows)
-            }
-
-            override fun onFailure(call: retrofit2.Call<TvShowResponse>, t: Throwable) {
-            }
-        })
+        val result = apiService.getPopularTvShows()
+        EspressoIdlingResource.decrement()
+        return result
     }
 
     fun getMovieDetail(movieId: Int, callback: MovieDetailCallback) {

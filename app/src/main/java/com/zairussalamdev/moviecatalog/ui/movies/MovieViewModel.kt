@@ -1,6 +1,5 @@
 package com.zairussalamdev.moviecatalog.ui.movies
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,7 +16,6 @@ class MovieViewModel(
     fun getAllMovies(): LiveData<List<MovieEntity>> {
         viewModelScope.launch {
             val movies = movieRepository.getMovieList()
-            Log.d("hehehe", movies.toString())
             movieList.postValue(movies)
         }
         return movieList

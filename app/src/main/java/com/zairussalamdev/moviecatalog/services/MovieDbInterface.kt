@@ -17,7 +17,7 @@ interface MovieDbInterface {
     suspend fun getNowPlayingMovies(): MovieResponse
 
     @GET("tv/popular?api_key=$apiKey")
-    fun getPopularTvShows(): Call<TvShowResponse>
+    suspend fun getPopularTvShows(): TvShowResponse
 
     @GET("movie/{movieId}?api_key=$apiKey")
     fun getMovieDetail(@Path("movieId") movieId: Int): Call<MovieDetailResponse>

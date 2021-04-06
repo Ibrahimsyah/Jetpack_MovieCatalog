@@ -9,7 +9,6 @@ import com.zairussalamdev.moviecatalog.data.source.local.entity.DetailEntity
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.data.source.remote.RemoteDataSource
 import com.zairussalamdev.moviecatalog.data.source.remote.response.MovieDetailResponse
-import com.zairussalamdev.moviecatalog.data.source.remote.response.TvShow
 import com.zairussalamdev.moviecatalog.data.source.remote.response.TvShowDetailResponse
 import com.zairussalamdev.moviecatalog.utils.AppExecutors
 import kotlinx.coroutines.Dispatchers
@@ -54,27 +53,21 @@ class MovieRepository private constructor(
         return movieList
     }
 
-    override fun getTvShowList(): LiveData<List<MovieEntity>> {
-        val tvShowsResult = MutableLiveData<List<MovieEntity>>()
-        remoteDataSource.getTvShowList(object : RemoteDataSource.TvShowListCallback {
-            override fun onTvShowListLoaded(tvShows: List<TvShow>?) {
-                val tvShowList = ArrayList<MovieEntity>()
-                tvShows?.forEach { tvShow ->
-                    tvShowList.add(
-                        MovieEntity(
-                            overview = tvShow.overview,
-                            title = tvShow.name,
-                            posterPath = tvShow.posterPath,
-                            voteAverage = tvShow.voteAverage,
-                            id = tvShow.id,
-                        )
-                    )
-                }
-                tvShowsResult.postValue(tvShowList)
-            }
-        })
-
-        return tvShowsResult
+    override suspend fun getTvShowList(): List<MovieEntity> {
+        val result = withContext(Dispatchers.IO) { remoteDataSource.getTvShowList() }
+        val tvShowList = ArrayList<MovieEntity>()
+        result.tvShows.forEach { tvShow ->
+            tvShowList.add(
+                MovieEntity(
+                    overview = tvShow.overview,
+                    title = tvShow.name,
+                    posterPath = tvShow.posterPath,
+                    voteAverage = tvShow.voteAverage,
+                    id = tvShow.id,
+                )
+            )
+        }
+        return tvShowList
     }
 
     override fun getMovieDetail(movieId: Int): LiveData<DetailEntity> {
