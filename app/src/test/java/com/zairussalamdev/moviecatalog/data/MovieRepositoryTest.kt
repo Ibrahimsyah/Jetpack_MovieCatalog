@@ -14,6 +14,7 @@ import com.zairussalamdev.moviecatalog.utils.AppExecutors
 import com.zairussalamdev.moviecatalog.utils.DummyData
 import com.zairussalamdev.moviecatalog.utils.LiveDataTestUtil
 import com.zairussalamdev.moviecatalog.utils.PagedDataTestUtil
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Rule
@@ -21,6 +22,7 @@ import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
+@Suppress("UNCHECKED_CAST")
 class MovieRepositoryTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
@@ -32,21 +34,16 @@ class MovieRepositoryTest{
 
     private val movieResponse = DummyData.getDummyMovieResponse()
     private val movieDetailResponse = DummyData.getDummyMovieDetailResponse()
-    private val movies = DummyData.getDummyListData()
     private val tvShowResponse = DummyData.getDummyTvShowResponse()
     private val tvShowDetailResponse = DummyData.getDummyTvShowDetailResponse()
 
     @Test
-    fun getAllMovies(){
-        doAnswer { invocation ->
-            (invocation.arguments[0] as RemoteDataSource.MovieListCallback)
-                .onMovieListLoaded(movieResponse)
-            null
-        }.`when`(remote).getMovieList(any())
-        val movieListTest = LiveDataTestUtil.getValue(movieRepository.getMovieList())
-        verify(remote).getMovieList(any())
+    fun getAllMovies() = runBlocking {
+        `when`(remote.getMovieList()).thenReturn(movieResponse)
+        val movieListTest = movieRepository.getMovieList()
+        verify(remote).getMovieList()
         assertNotNull(movieListTest)
-        assertEquals(movieResponse.size, movieListTest.size)
+        assertEquals(movieResponse.movies.size, movieListTest.size)
     }
 
     @Test
@@ -64,16 +61,12 @@ class MovieRepositoryTest{
     }
 
     @Test
-    fun getAllTvShows(){
-        doAnswer { invocation ->
-            (invocation.arguments[0] as RemoteDataSource.TvShowListCallback)
-                .onTvShowListLoaded(tvShowResponse)
-            null
-        }.`when`(remote).getTvShowList(any())
-        val tvShowListTest = LiveDataTestUtil.getValue(movieRepository.getTvShowList())
-        verify(remote).getTvShowList(any())
+    fun getAllTvShows() = runBlocking {
+        `when`(remote.getTvShowList()).thenReturn(tvShowResponse)
+        val tvShowListTest = movieRepository.getTvShowList()
+        verify(remote).getTvShowList()
         assertNotNull(tvShowListTest)
-        assertEquals(tvShowResponse.size, tvShowListTest.size)
+        assertEquals(tvShowResponse.tvShows.size, tvShowListTest.size)
     }
 
     @Test
@@ -91,8 +84,9 @@ class MovieRepositoryTest{
     }
 
     @Test
-    fun getFavoriteMovies(){
-        val dataSourceFactory = mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
+    fun getFavoriteMovies() {
+        val dataSourceFactory =
+            mock(DataSource.Factory::class.java) as DataSource.Factory<Int, MovieEntity>
         `when`(local.getFavouriteMovies()).thenReturn(dataSourceFactory)
         movieRepository.getFavoriteMovies()
 

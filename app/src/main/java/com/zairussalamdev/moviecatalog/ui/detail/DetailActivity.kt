@@ -64,7 +64,7 @@ class DetailActivity : AppCompatActivity() {
             binding.movieDetailStatus.text = detail?.status
         })
 
-        viewModel.checkMovieIsFavourite(contentId).observe(this, { it ->
+        viewModel.checkMovieIsFavourite(contentId).observe(this, {
             isFavorite = it
             val icon = if (isFavorite) R.drawable.ic_dislike else R.drawable.ic_like
             binding.fabFavorite.setImageResource(icon)

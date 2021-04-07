@@ -25,12 +25,10 @@ class LocalDataSource private constructor(private val movieDao: MovieDao) {
         movieDao.getAllFavoriteTvShows()
 
     fun insertFavoriteMovie(movie: MovieEntity) {
-        movieDao.update(movie);
         movieDao.insert(movie)
     }
 
     fun deleteFavoriteMovie(movie: MovieEntity) {
-        movieDao.update(movie);
         movieDao.delete(movie)
     }
 

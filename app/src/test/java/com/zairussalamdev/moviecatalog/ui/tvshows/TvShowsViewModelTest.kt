@@ -1,13 +1,13 @@
 package com.zairussalamdev.moviecatalog.ui.tvshows
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.utils.DummyData
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,12 +37,10 @@ class TvShowsViewModelTest {
     }
 
     @Test
-    fun getAllTvShows() {
+    fun getAllTvShows() = runBlocking {
         val dummyTvShows = DummyData.getDummyListData()
-        val tvShow = MutableLiveData<List<MovieEntity>>()
-        tvShow.value = dummyTvShows
 
-        `when`(movieRepository.getTvShowList()).thenReturn(tvShow)
+        `when`(movieRepository.getTvShowList()).thenReturn(dummyTvShows)
         val movieEntities = tvShowsViewModel.getAllTvShows().value
         verify(movieRepository).getTvShowList()
         assertNotNull(movieEntities)

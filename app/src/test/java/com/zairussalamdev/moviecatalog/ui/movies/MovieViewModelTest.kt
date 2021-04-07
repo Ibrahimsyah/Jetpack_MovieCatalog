@@ -1,13 +1,13 @@
 package com.zairussalamdev.moviecatalog.ui.movies
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.utils.DummyData
-import junit.framework.Assert.assertEquals
-import junit.framework.Assert.assertNotNull
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,12 +37,9 @@ class MovieViewModelTest {
     }
 
     @Test
-    fun getAllMovies() {
+    fun getAllMovies() = runBlocking {
         val dummyMovies = DummyData.getDummyListData()
-        val movies = MutableLiveData<List<MovieEntity>>()
-        movies.value = dummyMovies
-
-        `when`(movieRepository.getMovieList()).thenReturn(movies)
+        `when`(movieRepository.getMovieList()).thenReturn(dummyMovies)
         val movieEntities = movieViewModel.getAllMovies().value
         verify(movieRepository).getMovieList()
         assertNotNull(movieEntities)
