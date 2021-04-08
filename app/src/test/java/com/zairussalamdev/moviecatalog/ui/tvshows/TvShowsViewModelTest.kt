@@ -5,9 +5,11 @@ import androidx.lifecycle.Observer
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.utils.DummyData
-import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -17,9 +19,12 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
+@ObsoleteCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class TvShowsViewModelTest {
 
+    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
     private lateinit var tvShowsViewModel: TvShowsViewModel
 
     @get:Rule
@@ -34,17 +39,22 @@ class TvShowsViewModelTest {
     @Before
     fun init() {
         tvShowsViewModel = TvShowsViewModel(movieRepository)
+        Dispatchers.setMain(mainThreadSurrogate)
+    }
+
+
+    @After
+    fun cleanUp() {
+        Dispatchers.resetMain()
+        mainThreadSurrogate.close()
     }
 
     @Test
     fun getAllTvShows() = runBlocking {
         val dummyTvShows = DummyData.getDummyListData()
-
         `when`(movieRepository.getTvShowList()).thenReturn(dummyTvShows)
-        val movieEntities = tvShowsViewModel.getAllTvShows().value
-        verify(movieRepository).getTvShowList()
+        val movieEntities = tvShowsViewModel.getAllTvShows()
         assertNotNull(movieEntities)
-        assertEquals(dummyTvShows.size, movieEntities?.size)
 
         tvShowsViewModel.getAllTvShows().observeForever(observer)
         verify(observer).onChanged(dummyTvShows)
