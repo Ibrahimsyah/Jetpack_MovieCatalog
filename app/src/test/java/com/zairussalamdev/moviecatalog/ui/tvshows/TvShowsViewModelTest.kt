@@ -5,11 +5,9 @@ import androidx.lifecycle.Observer
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.MovieEntity
 import com.zairussalamdev.moviecatalog.utils.DummyData
+import com.zairussalamdev.moviecatalog.utils.TestCoroutineRule
 import junit.framework.TestCase.assertNotNull
-import kotlinx.coroutines.*
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import org.junit.After
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,15 +18,16 @@ import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
-@ObsoleteCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class TvShowsViewModelTest {
 
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
     private lateinit var tvShowsViewModel: TvShowsViewModel
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
+    val testCoroutineRule = TestCoroutineRule()
 
     @Mock
     private lateinit var movieRepository: MovieRepository
@@ -39,24 +38,18 @@ class TvShowsViewModelTest {
     @Before
     fun init() {
         tvShowsViewModel = TvShowsViewModel(movieRepository)
-        Dispatchers.setMain(mainThreadSurrogate)
-    }
-
-
-    @After
-    fun cleanUp() {
-        Dispatchers.resetMain()
-        mainThreadSurrogate.close()
     }
 
     @Test
-    fun getAllTvShows() = runBlocking {
-        val dummyTvShows = DummyData.getDummyListData()
-        `when`(movieRepository.getTvShowList()).thenReturn(dummyTvShows)
-        val movieEntities = tvShowsViewModel.getAllTvShows()
-        assertNotNull(movieEntities)
-
-        tvShowsViewModel.getAllTvShows().observeForever(observer)
-        verify(observer).onChanged(dummyTvShows)
+    fun getAllTvShows() {
+        testCoroutineRule.runBlockingTest {
+            val dummyTvShows = DummyData.getDummyListData()
+            `when`(movieRepository.getTvShowList()).thenReturn(dummyTvShows)
+            val movieEntities = tvShowsViewModel.getAllTvShows()
+            assertNotNull(movieEntities)
+            verify(movieRepository).getTvShowList()
+            tvShowsViewModel.getAllTvShows().observeForever(observer)
+            verify(observer).onChanged(dummyTvShows)
+        }
     }
 }
