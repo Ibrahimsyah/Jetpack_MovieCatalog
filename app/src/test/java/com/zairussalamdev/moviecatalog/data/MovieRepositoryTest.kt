@@ -3,8 +3,6 @@ package com.zairussalamdev.moviecatalog.data
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.verify
 import com.zairussalamdev.moviecatalog.data.source.local.LocalDataSource
@@ -27,7 +25,6 @@ class MovieRepositoryTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-
     private val remote = mock(RemoteDataSource::class.java)
     private val local = mock(LocalDataSource::class.java)
     private val appExecutors = mock(AppExecutors::class.java)
@@ -48,15 +45,11 @@ class MovieRepositoryTest{
     }
 
     @Test
-    fun getMovieDetail(){
+    fun getMovieDetail() = runBlocking {
         val movieId = 1
-        doAnswer { invocation ->
-            (invocation.arguments[1] as RemoteDataSource.MovieDetailCallback)
-                .onMovieDetailLoaded(movieDetailResponse)
-            null
-        }.`when`(remote).getMovieDetail(eq(movieId), any())
-        val movieDetailTest = LiveDataTestUtil.getValue(movieRepository.getMovieDetail(movieId))
-        verify(remote).getMovieDetail(eq(movieId), any())
+        `when`(remote.getMovieDetail(eq(movieId))).thenReturn(movieDetailResponse)
+        val movieDetailTest = movieRepository.getMovieDetail(movieId)
+        verify(remote).getMovieDetail(eq(movieId))
         assertNotNull(movieDetailTest)
         assertEquals(movieDetailResponse.title, movieDetailTest.title)
     }
@@ -71,15 +64,11 @@ class MovieRepositoryTest{
     }
 
     @Test
-    fun getTvShowDetail(){
+    fun getTvShowDetail() = runBlocking {
         val tvShowId = 1
-        doAnswer { invocation ->
-            (invocation.arguments[1] as RemoteDataSource.TvShowDetailCallback)
-                .onTvShowDetailLoaded(tvShowDetailResponse)
-            null
-        }.`when`(remote).getTvShowDetail(eq(tvShowId), any())
-        val tvShowDetailTest = LiveDataTestUtil.getValue(movieRepository.getTvShowDetail(tvShowId))
-        verify(remote).getTvShowDetail(eq(tvShowId), any())
+        `when`(remote.getTvShowDetail(eq(tvShowId))).thenReturn(tvShowDetailResponse)
+        val tvShowDetailTest = movieRepository.getTvShowDetail(tvShowId)
+        verify(remote).getTvShowDetail(eq(tvShowId))
         assertNotNull(tvShowDetailTest)
         assertEquals(tvShowDetailResponse.title, tvShowDetailTest.title)
     }

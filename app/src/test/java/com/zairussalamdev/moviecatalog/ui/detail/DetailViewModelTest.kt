@@ -7,8 +7,10 @@ import com.nhaarman.mockitokotlin2.doNothing
 import com.zairussalamdev.moviecatalog.data.MovieRepository
 import com.zairussalamdev.moviecatalog.data.source.local.entity.DetailEntity
 import com.zairussalamdev.moviecatalog.utils.DummyData
+import com.zairussalamdev.moviecatalog.utils.TestCoroutineRule
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,6 +20,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class DetailViewModelTest {
     private lateinit var detailViewModel: DetailViewModel
@@ -32,6 +35,10 @@ class DetailViewModelTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+
+    @get:Rule
+    var testCoroutineRule = TestCoroutineRule()
 
     @Mock
     private lateinit var movieRepository: MovieRepository
@@ -49,34 +56,36 @@ class DetailViewModelTest {
 
     @Test
     fun getMovieDetail() {
-        val movieId = 1
+        testCoroutineRule.runBlockingTest {
+            val movieId = 1
 
-        val movieDetail = MutableLiveData<DetailEntity>()
-        movieDetail.value = dummyDetail
+            val movieDetail = dummyDetail
 
-        `when`(movieRepository.getMovieDetail(movieId)).thenReturn(movieDetail)
-        val movieDetailResult = detailViewModel.getMovieDetail(TYPE_MOVIE, movieId)
-        verify(movieRepository).getMovieDetail(movieId)
-        assertNotNull(movieDetailResult)
+            `when`(movieRepository.getMovieDetail(movieId)).thenReturn(movieDetail)
+            val movieDetailResult = detailViewModel.getMovieDetail(TYPE_MOVIE, movieId)
+            verify(movieRepository).getMovieDetail(movieId)
+            assertNotNull(movieDetailResult)
 
-        detailViewModel.getMovieDetail(TYPE_MOVIE, movieId).observeForever(observer)
-        verify(observer).onChanged(dummyDetail)
+            detailViewModel.getMovieDetail(TYPE_MOVIE, movieId).observeForever(observer)
+            verify(observer).onChanged(dummyDetail)
+        }
     }
 
     @Test
-    fun getTvShowDetail(){
-        val tvShowId = 1
+    fun getTvShowDetail() {
+        testCoroutineRule.runBlockingTest {
+            val tvShowId = 1
 
-        val tvShowDetail = MutableLiveData<DetailEntity>()
-        tvShowDetail.value = dummyDetail
+            val tvShowDetail = dummyDetail
 
-        `when`(movieRepository.getTvShowDetail(tvShowId)).thenReturn(tvShowDetail)
-        val tvShowDetailResult = detailViewModel.getMovieDetail(TYPE_TV_SHOW, tvShowId)
-        verify(movieRepository).getTvShowDetail(tvShowId)
-        assertNotNull(tvShowDetailResult)
+            `when`(movieRepository.getTvShowDetail(tvShowId)).thenReturn(tvShowDetail)
+            val tvShowDetailResult = detailViewModel.getMovieDetail(TYPE_TV_SHOW, tvShowId)
+            verify(movieRepository).getTvShowDetail(tvShowId)
+            assertNotNull(tvShowDetailResult)
 
-        detailViewModel.getMovieDetail(TYPE_TV_SHOW, tvShowId).observeForever(observer)
-        verify(observer).onChanged(dummyDetail)
+            detailViewModel.getMovieDetail(TYPE_TV_SHOW, tvShowId).observeForever(observer)
+            verify(observer).onChanged(dummyDetail)
+        }
     }
 
     @Test
