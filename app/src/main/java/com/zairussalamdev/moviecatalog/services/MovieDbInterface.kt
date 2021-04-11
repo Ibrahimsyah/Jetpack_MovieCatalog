@@ -5,7 +5,6 @@ import com.zairussalamdev.moviecatalog.data.source.remote.response.MovieDetailRe
 import com.zairussalamdev.moviecatalog.data.source.remote.response.MovieResponse
 import com.zairussalamdev.moviecatalog.data.source.remote.response.TvShowDetailResponse
 import com.zairussalamdev.moviecatalog.data.source.remote.response.TvShowResponse
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -20,9 +19,9 @@ interface MovieDbInterface {
     suspend fun getPopularTvShows(): TvShowResponse
 
     @GET("movie/{movieId}?api_key=$apiKey")
-    fun getMovieDetail(@Path("movieId") movieId: Int): Call<MovieDetailResponse>
+    suspend fun getMovieDetail(@Path("movieId") movieId: Int): MovieDetailResponse
 
     @GET("tv/{tvId}?api_key=$apiKey")
-    fun getTvShowDetail(@Path("tvId") tvId: Int): Call<TvShowDetailResponse>
+    suspend fun getTvShowDetail(@Path("tvId") tvId: Int): TvShowDetailResponse
 }
 

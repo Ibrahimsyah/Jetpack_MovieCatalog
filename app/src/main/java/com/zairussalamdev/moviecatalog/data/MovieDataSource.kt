@@ -10,9 +10,9 @@ interface MovieDataSource {
 
     suspend fun getTvShowList(): List<MovieEntity>
 
-    fun getMovieDetail(movieId: Int): LiveData<DetailEntity>
+    suspend fun getMovieDetail(movieId: Int): DetailEntity
 
-    fun getTvShowDetail(tvShowId: Int): LiveData<DetailEntity>
+    suspend fun getTvShowDetail(tvShowId: Int): DetailEntity
 
     fun getFavoriteMovies(): LiveData<PagedList<MovieEntity>>
 

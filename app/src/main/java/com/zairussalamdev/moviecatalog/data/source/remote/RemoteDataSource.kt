@@ -3,8 +3,6 @@ package com.zairussalamdev.moviecatalog.data.source.remote
 import com.zairussalamdev.moviecatalog.data.source.remote.response.*
 import com.zairussalamdev.moviecatalog.services.MovieDbInterface
 import com.zairussalamdev.moviecatalog.utils.EspressoIdlingResource
-import retrofit2.Callback
-import retrofit2.Response
 
 class RemoteDataSource private constructor(private val apiService: MovieDbInterface) {
     companion object {
@@ -32,38 +30,18 @@ class RemoteDataSource private constructor(private val apiService: MovieDbInterf
         return result
     }
 
-    fun getMovieDetail(movieId: Int, callback: MovieDetailCallback) {
+    suspend fun getMovieDetail(movieId: Int): MovieDetailResponse {
         EspressoIdlingResource.increment()
-        apiService.getMovieDetail(movieId).enqueue(object : Callback<MovieDetailResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<MovieDetailResponse>,
-                responseMovie: Response<MovieDetailResponse>
-            ) {
-                val movieDetail = responseMovie.body()
-                EspressoIdlingResource.decrement()
-                return callback.onMovieDetailLoaded(movieDetail)
-            }
-
-            override fun onFailure(call: retrofit2.Call<MovieDetailResponse>, t: Throwable) {
-            }
-        })
+        val result = apiService.getMovieDetail(movieId)
+        EspressoIdlingResource.decrement()
+        return result
     }
 
-    fun getTvShowDetail(tvShowId: Int, callback : TvShowDetailCallback) {
+    suspend fun getTvShowDetail(tvShowId: Int): TvShowDetailResponse {
         EspressoIdlingResource.increment()
-        apiService.getTvShowDetail(tvShowId).enqueue(object : Callback<TvShowDetailResponse> {
-            override fun onResponse(
-                call: retrofit2.Call<TvShowDetailResponse>,
-                responseMovie: Response<TvShowDetailResponse>
-            ) {
-                val tvShowDetail = responseMovie.body()
-                EspressoIdlingResource.decrement()
-                return callback.onTvShowDetailLoaded(tvShowDetail)
-            }
-
-            override fun onFailure(call: retrofit2.Call<TvShowDetailResponse>, t: Throwable) {
-            }
-        })
+        val result = apiService.getTvShowDetail(tvShowId)
+        EspressoIdlingResource.decrement()
+        return result
     }
 
     interface MovieListCallback{
